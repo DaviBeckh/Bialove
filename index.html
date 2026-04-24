@@ -55,7 +55,6 @@ body {
   border-radius: 8px;
   padding: 10px;
   box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-
   transform: translateY(100px);
   opacity: 0;
   transition: all 0.6s;
@@ -83,6 +82,7 @@ body {
   cursor: pointer;
   opacity: 0;
   transition: 0.5s;
+  z-index: 10;
 }
 
 /* Animação */
@@ -104,6 +104,7 @@ body {
 .heart {
   position: absolute;
   animation: float 4s linear infinite;
+  pointer-events: none; /* Para não atrapalhar o clique */
 }
 
 @keyframes float {
@@ -120,24 +121,23 @@ body {
 <div class="envelope" onclick="openLetter()">
   <div class="flap"></div>
 
-  <!-- CARTA -->
   <div class="letter">
     <p id="text"></p>
+    <button id="btn" onclick="responder(event)">Responder</button>
   </div>
-
-  <!-- BOTÃO -->
 </div>
+
 <script>
 let heartInterval = null;
 let opened = false;
 
-const mensagem = Bia, desde que você entrou na minha vida, tudo ficou mais leve, mais bonito e mais cheio de sentido. Você é aquele detalhe que transforma um dia comum em algo especial. Eu só queria que você soubesse que, em cada sorriso seu, eu encontro um motivo a mais pra te amar. 💖`;
+// Corrigido: adicionada a aspa inicial aqui
+const mensagem = "Bia, desde que você entrou na minha vida, tudo ficou mais leve, mais bonito e mais cheio de sentido. Você é aquele detalhe que transforma um dia comum em algo especial. Eu só queria que você soubesse que, em cada sorriso seu, eu encontro um motivo a mais pra te amar. 💖";
 
 let i = 0;
 
 function escreverTexto() {
   const elemento = document.getElementById("text");
-
   if (i < mensagem.length) {
     elemento.innerHTML += mensagem.charAt(i);
     i++;
@@ -146,20 +146,22 @@ function escreverTexto() {
 }
 
 function openLetter() {
+  if (opened) return; // Evita abrir várias vezes
+  
   const env = document.querySelector(".envelope");
   env.classList.add("open");
+  opened = true;
 
-  if (!opened) {
-    opened = true;
-
-    document.getElementById("music").play();
-    createHearts();
-    escreverTexto();
-  }
+  // Tenta tocar a música (alguns navegadores bloqueiam autoplay sem interação)
+  document.getElementById("music").play().catch(e => console.log("Áudio bloqueado pelo navegador"));
+  
+  createHearts();
+  escreverTexto();
 }
 
-function responder() {
-  alert("Não da pra responder por aqui kkkkkkk");
+function responder(event) {
+  event.stopPropagation(); // Impede que o clique no botão abra o envelope de novo
+  alert("Não dá pra responder por aqui kkkkkkk");
 }
 
 function createHearts() {
@@ -169,12 +171,9 @@ function createHearts() {
     const heart = document.createElement("div");
     heart.classList.add("heart");
     heart.innerHTML = "❤️";
-
     heart.style.left = Math.random() * 90 + "vw";
     heart.style.fontSize = (Math.random() * 20 + 10) + "px";
-
     document.body.appendChild(heart);
-
     setTimeout(() => heart.remove(), 4000);
   }, 300);
 }
