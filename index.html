@@ -2,6 +2,7 @@
 <html lang="pt-br">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>4Bia</title>
 
 <style>
@@ -14,75 +15,67 @@ body {
   align-items: center;
   font-family: Arial, sans-serif;
   overflow: hidden;
+  /* Melhora o toque no mobile */
+  -webkit-tap-highlight-color: transparent; 
 }
 
 /* Envelope */
 .envelope {
-  width: 250px;
-  height: 180px;
+  width: 90%; /* Ajuste para ocupar a largura da tela */
+  max-width: 300px; /* Limite de tamanho */
+  height: 200px;
   background: #ff6b81;
   position: relative;
   cursor: pointer;
   transition: transform 0.5s;
 }
 
-.envelope:hover {
-  transform: scale(1.05);
-}
-
 /* Tampa */
 .flap {
   width: 0;
   height: 0;
-  border-left: 125px solid transparent;
-  border-right: 125px solid transparent;
-  border-top: 90px solid #ff4757;
+  border-left: 150px solid transparent; /* Ajustado proporcionalmente */
+  border-right: 150px solid transparent;
+  border-top: 100px solid #ff4757;
   position: absolute;
-  top: 2px;
-  left: 0;
+  top: 0;
+  left: -25px; /* Centralizando a aba no envelope */
   transform-origin: top;
   transition: transform 0.6s;
 }
 
 /* Carta */
 .letter {
-  width: 220px;
-  height: 140px;
+  width: 90%;
+  max-width: 260px;
+  height: 160px;
   background: white;
   position: absolute;
-  top: 20px;
-  left: 15px;
+  top: 10px;
+  left: 5%;
   border-radius: 8px;
   padding: 10px;
   box-shadow: 0 5px 15px rgba(0,0,0,0.2);
   transform: translateY(100px);
   opacity: 0;
   transition: all 0.6s;
-  font-size: 13px;
+  font-size: 14px; /* Aumentado levemente para leitura fácil */
   text-align: center;
-  overflow: hidden;
-}
-
-/* Texto */
-#text {
-  white-space: pre-line;
+  overflow-y: auto; /* Caso o texto seja longo, permite rolar */
 }
 
 /* Botão */
 #btn {
-  position: absolute;
-  bottom: -40px;
-  left: 50%;
-  transform: translateX(-50%);
-  padding: 8px 12px;
+  display: block;
+  margin: 10px auto;
+  padding: 12px 20px; /* Botão maior para facilitar o clique com o dedo */
   border: none;
   background: #ff4757;
   color: white;
   border-radius: 5px;
   cursor: pointer;
-  opacity: 0;
-  transition: 0.5s;
-  z-index: 10;
+  font-size: 16px;
+  touch-action: manipulation;
 }
 
 /* Animação */
@@ -95,21 +88,16 @@ body {
   opacity: 1;
 }
 
-.open #btn {
-  opacity: 1;
-  bottom: -60px;
-}
-
 /* Corações */
 .heart {
   position: absolute;
   animation: float 4s linear infinite;
-  pointer-events: none; /* Para não atrapalhar o clique */
+  pointer-events: none;
 }
 
 @keyframes float {
   0% { transform: translateY(0); opacity: 1; }
-  100% { transform: translateY(-600px); opacity: 0; }
+  100% { transform: translateY(-100vh); opacity: 0; }
 }
 </style>
 </head>
@@ -131,7 +119,6 @@ body {
 let heartInterval = null;
 let opened = false;
 
-// Corrigido: adicionada a aspa inicial aqui
 const mensagem = "Bia, desde que você entrou na minha vida, tudo ficou mais leve, mais bonito e mais cheio de sentido. Você é aquele detalhe que transforma um dia comum em algo especial. Eu só queria que você soubesse que, em cada sorriso seu, eu encontro um motivo a mais pra te amar. 💖";
 
 let i = 0;
@@ -146,21 +133,22 @@ function escreverTexto() {
 }
 
 function openLetter() {
-  if (opened) return; // Evita abrir várias vezes
+  if (opened) return;
   
   const env = document.querySelector(".envelope");
   env.classList.add("open");
   opened = true;
 
-  // Tenta tocar a música (alguns navegadores bloqueiam autoplay sem interação)
-  document.getElementById("music").play().catch(e => console.log("Áudio bloqueado pelo navegador"));
+  // Tenta tocar música (Mobile exige interação do usuário)
+  const audio = document.getElementById("music");
+  audio.play().catch(e => console.log("Áudio bloqueado"));
   
   createHearts();
   escreverTexto();
 }
 
 function responder(event) {
-  event.stopPropagation(); // Impede que o clique no botão abra o envelope de novo
+  event.stopPropagation();
   alert("Não dá pra responder por aqui kkkkkkk");
 }
 
@@ -181,3 +169,4 @@ function createHearts() {
 
 </body>
 </html>
+
