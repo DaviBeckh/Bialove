@@ -2,7 +2,7 @@
 <html lang="pt-br">
 <head>
 <meta charset="UTF-8">
-<title>4Sofia</title>
+<title>4Bia</title>
 
 <style>
 body {
@@ -44,19 +44,29 @@ body {
   transition: transform 0.6s;
 }
 
-/* Imagem */
-.photo {
-  width: 238px;
-  height: 357px;
-  object-fit: cover;
+/* Carta */
+.letter {
+  width: 220px;
+  height: 140px;
+  background: white;
   position: absolute;
-  top: -150px;
-  left: 6px;
-  border-radius: 10px;
+  top: 20px;
+  left: 15px;
+  border-radius: 8px;
+  padding: 10px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
 
   transform: translateY(100px);
   opacity: 0;
   transition: all 0.6s;
+  font-size: 13px;
+  text-align: center;
+  overflow: hidden;
+}
+
+/* Texto */
+#text {
+  white-space: pre-line;
 }
 
 /* Botão */
@@ -80,8 +90,8 @@ body {
   transform: rotateX(180deg);
 }
 
-.open .photo {
-  transform: translateY(-40px);
+.open .letter {
+  transform: translateY(-80px);
   opacity: 1;
 }
 
@@ -93,7 +103,6 @@ body {
 /* Corações */
 .heart {
   position: absolute;
-  color: red;
   animation: float 4s linear infinite;
 }
 
@@ -106,22 +115,35 @@ body {
 
 <body>
 
-<!-- Música -->
 <audio id="music" src="musica.mp3"></audio>
 
 <div class="envelope" onclick="openLetter()">
   <div class="flap"></div>
 
-  <!-- IMAGEM -->
-  <img src="imagem.jfif" class="photo">
+  <!-- CARTA -->
+  <div class="letter">
+    <p id="text"></p>
+  </div>
 
   <!-- BOTÃO -->
-  <button id="btn" onclick="event.stopPropagation(); responder()">Responder</button>
 </div>
-
 <script>
 let heartInterval = null;
 let opened = false;
+
+const mensagem = Bia, desde que você entrou na minha vida, tudo ficou mais leve, mais bonito e mais cheio de sentido. Você é aquele detalhe que transforma um dia comum em algo especial. Eu só queria que você soubesse que, em cada sorriso seu, eu encontro um motivo a mais pra te amar. 💖`;
+
+let i = 0;
+
+function escreverTexto() {
+  const elemento = document.getElementById("text");
+
+  if (i < mensagem.length) {
+    elemento.innerHTML += mensagem.charAt(i);
+    i++;
+    setTimeout(escreverTexto, 40);
+  }
+}
 
 function openLetter() {
   const env = document.querySelector(".envelope");
@@ -130,11 +152,9 @@ function openLetter() {
   if (!opened) {
     opened = true;
 
-    // Música
     document.getElementById("music").play();
-
-    // Corações
     createHearts();
+    escreverTexto();
   }
 }
 
